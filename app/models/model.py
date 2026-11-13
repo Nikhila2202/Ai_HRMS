@@ -58,83 +58,103 @@ class Employee(Base):
 
 class User(Base):
     __tablename__ = "users"
+
     user_id = Column(BigInteger, primary_key=True, autoincrement=True)
-    employee_id = Column(BigInteger, ForeignKey("employees.employee_id"), nullable=True, unique=True)
+    employee_id = Column(
+        BigInteger,
+        ForeignKey("employees.employee_id"),
+        nullable=True,
+        unique=True
+    )
     email = Column(String, nullable=False, unique=True)
     password_hash = Column(Text, nullable=False)
     is_active = Column(Boolean, nullable=False, server_default=text("true"))
-    created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now())
+
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now()
+    )
+    updated_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+        onupdate=func.now()
+    )
 
     employee = relationship("Employee", back_populates="user")
-    roles = relationship("UserRole", back_populates="user")
-    conversations = relationship("AIConversation", back_populates="user")
-    from sqlalchemy.orm import relationship
-
-# Inside your existing User class
-
-roles = relationship(
-    "UserRole",
-    back_populates="user",
-    cascade="all, delete-orphan"
-)
+    roles = relationship(
+        "UserRole",
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )
+    conversations = relationship(
+        "AIConversation",
+        back_populates="user"
+    )
 
 class Role(Base):
     __tablename__ = "roles"
+
     role_id = Column(BigInteger, primary_key=True, autoincrement=True)
     role_name = Column(String, nullable=False, unique=True)
     description = Column(Text, nullable=True)
-    created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
-    users = relationship("UserRole", back_populates="role")
-    permissions = relationship("RolePermission", back_populates="role")
-    # Inside your existing Role class
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now()
+    )
 
-users = relationship(
-    "UserRole",
-    back_populates="role"
-)
+    users = relationship(
+        "UserRole",
+        back_populates="role",
+        cascade="all, delete-orphan"
+    )
 
-permissions = relationship(
-    "RolePermission",
-    back_populates="role",
-    cascade="all, delete-orphan"
-)
+    permissions = relationship(
+        "RolePermission",
+        back_populates="role",
+        cascade="all, delete-orphan"
+    )
 
 class Permission(Base):
     __tablename__ = "permissions"
+
     permission_id = Column(BigInteger, primary_key=True, autoincrement=True)
     permission_code = Column(String, nullable=False, unique=True)
     description = Column(Text, nullable=True)
-    created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
-    roles = relationship("RolePermission", back_populates="permission")
-    # Inside your existing Permission class
-# Inside your existing Permission class
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now()
+    )
 
-role_permissions = relationship(
-    "RolePermission",
-    back_populates="permission"
-)
-
+    roles = relationship(
+        "RolePermission",
+        back_populates="permission"
+    )
 
 class UserRole(Base):
     __tablename__ = "user_roles"
-    user_id = Column(BigInteger, ForeignKey("users.user_id"), primary_key=True)
-    role_id = Column(BigInteger, ForeignKey("roles.role_id"), primary_key=True)
-    assigned_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
+
+    user_id = Column(
+        BigInteger,
+        ForeignKey("users.user_id"),
+        primary_key=True
+    )
+    role_id = Column(
+        BigInteger,
+        ForeignKey("roles.role_id"),
+        primary_key=True
+    )
+    assigned_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now()
+    )
+
     user = relationship("User", back_populates="roles")
     role = relationship("Role", back_populates="users")
-    # Inside your existing UserRole class
-
-user = relationship(
-    "User",
-    back_populates="roles"
-)
-
-role = relationship(
-    "Role",
-    back_populates="users"
-)
-
 class RolePermission(Base):
     __tablename__ = "role_permissions"
     role_id = Column(BigInteger, ForeignKey("roles.role_id"), primary_key=True)

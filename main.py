@@ -4,8 +4,12 @@ from app.routers import (
     auth,
     employee,
     user,
-    protected, department
+    protected,
+    department,
+    roles,
+    role_permissions
 )
+
 
 app = FastAPI(
     title="AI Powered HRMS",
@@ -13,13 +17,19 @@ app = FastAPI(
     version="1.0.0"
 )
 
+
+# Register routers
+
 app.include_router(auth.router)
 app.include_router(employee.router)
 app.include_router(user.router)
 app.include_router(protected.router)
-
-
 app.include_router(department.router)
+app.include_router(roles.router)
+app.include_router(role_permissions.router)
+
+
+
 
 
 
