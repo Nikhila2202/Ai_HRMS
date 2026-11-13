@@ -158,4 +158,41 @@ def decode_access_token(token: str) -> dict:
 
     return payload
 
+#refresh token
+REFRESH_TOKEN_EXPIRE_DAYS = int(
+    os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "7")
+)
+
+
+def create_refresh_token(user_id: int):
+    now = datetime.now(timezone.utc)
+
+    payload = {
+        "sub": str(user_id),
+        "iat": now,
+        "exp": now + timedelta(
+            days=REFRESH_TOKEN_EXPIRE_DAYS
+        ),
+        "type": "refresh"
+    }
+
+    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+
+
+def decode_refresh_token(token: str):
+    try:
+        payload = jwt.decode(
+            token,
+            SECRET_KEY,
+            algorithms=[ALGORITHM],
+            options={"require": ["sub", "iat", "exp", "type"]}
+        )
+
+        if payload.get("type") != "refresh":
+            return None
+
+        return payload
+
+    except (jwt.InvalidTokenError, TypeError, ValueError):
+        return None
 

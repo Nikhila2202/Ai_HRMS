@@ -2,9 +2,9 @@ from fastapi import FastAPI
 
 from app.routers import (
     auth,
-    employee_signup,
+    employee,
     user,
-    protected
+    protected, department
 )
 
 app = FastAPI(
@@ -14,9 +14,17 @@ app = FastAPI(
 )
 
 app.include_router(auth.router)
-app.include_router(employee_signup.router)
+app.include_router(employee.router)
 app.include_router(user.router)
 app.include_router(protected.router)
+
+
+app.include_router(department.router)
+
+
+
+
+
 
 
 

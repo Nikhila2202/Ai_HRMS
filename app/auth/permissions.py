@@ -132,3 +132,34 @@ def require_permission(permission_code: str):
         return current_user
 
     return permission_checker
+
+
+#permission cheker
+from fastapi import Depends, HTTPException
+
+from app.auth.dependencies import get_current_user
+
+
+def require_permission(permission_code: str):
+
+    def permission_checker(
+        current_user=Depends(get_current_user)
+    ):
+
+        user_permissions = set()
+
+        for user_role in current_user.roles:
+            for role_permission in user_role.role.permissions:
+                user_permissions.add(
+                    role_permission.permission.permission_code
+                )
+
+        if permission_code not in user_permissions:
+            raise HTTPException(
+                status_code=403,
+                detail="You do not have permission to access this resource"
+            )
+
+        return current_user
+
+    return permission_checker
