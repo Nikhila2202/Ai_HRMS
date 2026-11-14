@@ -7,7 +7,7 @@ from app.routers import (
     protected,
     department,
     roles,
-    role_permissions
+    role_permissions,leave_types
 )
 
 
@@ -27,6 +27,7 @@ app.include_router(protected.router)
 app.include_router(department.router)
 app.include_router(roles.router)
 app.include_router(role_permissions.router)
+app.include_router(leave_types.router)
 
 
 

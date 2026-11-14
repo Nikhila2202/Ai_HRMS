@@ -193,25 +193,41 @@ class AuditLog(Base):
 
 class LeaveType(Base):
     __tablename__ = "leave_types"
+
     leave_type_id = Column(BigInteger, primary_key=True, autoincrement=True)
+
     leave_type_code = Column(String, nullable=False, unique=True)
+
     leave_type_name = Column(String, nullable=False)
+
     description = Column(Text, nullable=True)
+
     is_paid = Column(Boolean, nullable=False, server_default=text("true"))
+
     requires_approval = Column(Boolean, nullable=False, server_default=text("true"))
+
     min_notice_calendar_days = Column(Integer, nullable=False, server_default=text("0"))
+
     max_consecutive_days = Column(Numeric, nullable=True)
-    is_active = Column(Boolean, nullable=False, server_default=text("true"))
-    created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now())
-    entitlement_rules = relationship("LeaveEntitlementRule", back_populates="leave_type")
-    balances = relationship("LeaveBalance", back_populates="leave_type_obj")
-    requests = relationship("LeaveRequest", back_populates="leave_type_obj")
-    __table_args__ = (
-        CheckConstraint("min_notice_calendar_days >= 0", name="chk_leave_type_notice"),
-        CheckConstraint("max_consecutive_days IS NULL OR max_consecutive_days > 0", name="chk_leave_type_max_days"),
+
+    # ADD THIS COLUMN
+    max_days_per_year = Column(
+        Integer,
+        nullable=False,
+        server_default=text("20")
     )
 
+    is_active = Column(Boolean, nullable=False, server_default=text("true"))
+
+    created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
+
+    updated_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now())
+
+    entitlement_rules = relationship("LeaveEntitlementRule", back_populates="leave_type")
+
+    balances = relationship("LeaveBalance", back_populates="leave_type_obj")
+
+    requests = relationship("LeaveRequest", back_populates="leave_type_obj")
 
 class LeaveEntitlementRule(Base):
     __tablename__ = "leave_entitlement_rules"
