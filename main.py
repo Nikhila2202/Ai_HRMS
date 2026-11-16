@@ -7,7 +7,7 @@ from app.routers import (
     protected,
     department,
     roles,
-    role_permissions,leave_types
+    role_permissions,leave_types, leave_entitlement, leave_balance, leave_request,leave_approval, holiday
 )
 
 
@@ -28,6 +28,11 @@ app.include_router(department.router)
 app.include_router(roles.router)
 app.include_router(role_permissions.router)
 app.include_router(leave_types.router)
+app.include_router(leave_entitlement.router)
+app.include_router(leave_balance.router)
+app.include_router(leave_request.router)
+app.include_router(leave_approval.router)
+app.include_router(holiday.router)
 
 
 

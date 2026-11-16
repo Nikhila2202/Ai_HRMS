@@ -291,17 +291,50 @@ class LeaveRequest(Base):
         Index("idx_leave_requests_employee_status", "employee_id", "status"),
     )
 
+
 class LeaveApproval(Base):
     __tablename__ = "leave_approvals"
-    leave_approval_id = Column(BigInteger, primary_key=True, autoincrement=True)
-    leave_request_id = Column(BigInteger, ForeignKey("leave_requests.leave_request_id"), nullable=False)
-    approver_employee_id = Column(BigInteger, ForeignKey("employees.employee_id"), nullable=False)
-    decision = Column(String, nullable=False)
+
+    leave_approval_id = Column(
+        BigInteger, primary_key=True, autoincrement=True
+    )
+
+    leave_request_id = Column(
+        BigInteger,
+        ForeignKey("leave_requests.leave_request_id"),
+        nullable=False
+    )
+
+    approver_employee_id = Column(
+        BigInteger,
+        ForeignKey("employees.employee_id"),
+        nullable=False
+    )
+
+    decision = Column(String, nullable=False, default="PENDING")
+
     comments = Column(Text, nullable=True)
-    decided_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
-    created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
-    leave_request = relationship("LeaveRequest", back_populates="approvals")
-    __table_args__ = (Index("idx_leave_approvals_request", "leave_request_id", "decided_at"),)
+
+    decided_at = Column(DateTime(timezone=True), nullable=True)
+
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now()
+    )
+
+    leave_request = relationship(
+        "LeaveRequest",
+        back_populates="approvals"
+    )
+
+    __table_args__ = (
+        Index(
+            "idx_leave_approvals_request",
+            "leave_request_id",
+            "decided_at"
+        ),
+    )
 
 
 class LeaveTransaction(Base):
