@@ -498,7 +498,12 @@ class AIConversation(Base):
     started_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
     last_message_at = Column(DateTime(timezone=True), nullable=True)
     ended_at = Column(DateTime(timezone=True), nullable=True)
-    conversation_metadata = Column("metadata", JSONB,nullable=False, server_default=text("'{}'::jsonb"))
+    conversation_metadata = Column(
+    "metadata",
+    JSONB,
+    nullable=False,
+    server_default=text("'{}'::jsonb")
+)
     user = relationship("User", back_populates="conversations")
     messages = relationship("AIMessage", back_populates="conversation")
     tool_executions = relationship("AIToolExecution", back_populates="conversation")
