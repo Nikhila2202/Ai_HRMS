@@ -9,7 +9,7 @@ from app.routers import (
     department,
     roles,
     role_permissions,leave_types, leave_entitlement, leave_balance, leave_request,leave_approval, holiday, hr_document
- ,timesheet
+ ,timesheet, ai_assistant, audit_log
 )
 
 
@@ -37,6 +37,8 @@ app.include_router(leave_approval.router)
 app.include_router(holiday.router)
 app.include_router(hr_document.router)
 app.include_router(timesheet.router)
+app.include_router(ai_assistant.router)
+app.include_router(audit_log.router)
 
 
 

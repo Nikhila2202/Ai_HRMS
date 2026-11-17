@@ -189,6 +189,7 @@ class AuditLog(Base):
         Index("idx_audit_logs_entity", "entity_type", "entity_id"),
     )
 
+
 # 2. LEAVE MANAGEMENT (7 TABLES)
 
 class LeaveType(Base):
